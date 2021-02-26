@@ -24,11 +24,14 @@
   },
   "rules": {
     "linebreak-style": "off",
-    "prettier/prettier": [
-      "error",
+    "prettier/prettier": ["error",
       {
-        "endOfLine": "auto"
+        "trailingComma": "all"
       }
-    ]
+    ],
+    "react/prop-types": 0,
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

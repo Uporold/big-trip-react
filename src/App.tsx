@@ -1,7 +1,7 @@
 import React from "react";
 import Main from "./pages/main/main";
 
-const App = () => {
+const App: React.FC = (): JSX.Element => {
   return <Main />;
 };
 
