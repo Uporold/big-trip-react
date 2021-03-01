@@ -29,3 +29,5 @@ export const months = [
   `NOV`,
   `DEC`,
 ];
+
+export const filters = [`everything`, `future`, `past`];

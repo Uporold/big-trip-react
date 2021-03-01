@@ -1,6 +1,9 @@
 import React from "react";
 import { usePoints } from "../../redux/data/hooks/selectors";
 import Trail from "../trail/trail";
+import Controls from "../controls";
+import Filter from "../filter/filter";
+import TotalPrice from "../total-price";
 
 const Header: React.FC = (): JSX.Element => {
   const points = usePoints().sort(
@@ -20,12 +23,15 @@ const Header: React.FC = (): JSX.Element => {
 
         <div className="trip-main">
           {/* Trail component */}
-          <Trail points={points} />
+          <section className="trip-main__trip-info  trip-info">
+            <Trail points={points} />
+            <TotalPrice points={points} />
+          </section>
           <div className="trip-main__trip-controls  trip-controls">
             <h2 className="visually-hidden">Switch trip view</h2>
-            {/* Menu component */}
+            <Controls />
             <h2 className="visually-hidden">Filter events</h2>
-            {/* Filter component */}
+            <Filter />
           </div>
 
           <button
