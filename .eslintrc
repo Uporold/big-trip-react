@@ -1,4 +1,4 @@
-{
+  {
   "extends": [
     "airbnb-typescript",
     "airbnb/hooks",
@@ -32,6 +32,8 @@
     "react/prop-types": 0,
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "import/prefer-default-export": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "import/no-cycle": "off"
   }
 }

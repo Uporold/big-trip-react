@@ -1,15 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { usePoints } from "../../redux/data/hooks/selectors";
 import Trail from "../trail/trail";
 import Controls from "../controls";
 import Filter from "../filter/filter";
 import TotalPrice from "../total-price";
 
-const Header: React.FC = (): JSX.Element => {
+const Header: React.FC = memo(function Header(): JSX.Element {
   const points = usePoints().sort(
     (a, b) => a.startDate.valueOf() - b.startDate.valueOf(),
   );
-
+  console.log(`header`);
   return (
     <header className="page-header">
       <div className="page-body__container  page-header__container">
@@ -20,7 +20,6 @@ const Header: React.FC = (): JSX.Element => {
           height="42"
           alt="Trip logo"
         />
-
         <div className="trip-main">
           {/* Trail component */}
           <section className="trip-main__trip-info  trip-info">
@@ -44,6 +43,6 @@ const Header: React.FC = (): JSX.Element => {
       </div>
     </header>
   );
-};
+});
 
 export default Header;

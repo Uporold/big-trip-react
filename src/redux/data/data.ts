@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios";
 import { pointAdapter } from "../adapter/adapter";
 import { Destination, OfferWithType, Point, PointBackend } from "../../types";
-// eslint-disable-next-line import/no-cycle
 import { InferActionsTypes, BaseThunkActionType } from "../reducer";
 
 export const initialState = {

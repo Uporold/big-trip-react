@@ -8,7 +8,6 @@ const Filter: React.FC = (): JSX.Element => {
     evt.preventDefault();
     setFilter(filter);
   };
-
   return (
     <form className="trip-filters" action="#" method="get">
       {filters.map((filter) => (
