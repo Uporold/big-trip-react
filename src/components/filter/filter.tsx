@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { filters } from "../../const";
+import { FilterType } from "../../types";
 
 const Filter: React.FC = (): JSX.Element => {
-  const [currentFilter, setFilter] = useState(`everything`);
-
-  const setFilterHandler = (filter: string) => (evt: React.MouseEvent) => {
+  const [currentFilter, setFilter] = useState<FilterType>(`everything`);
+  const setFilterHandler = (filter: FilterType) => (evt: React.MouseEvent) => {
     evt.preventDefault();
     setFilter(filter);
   };

@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { getDestinations, getOffers, getPoints } from "../selectors";
-import { Destination, OfferWithType, Point } from "../../../types";
+import { Destination, OfferWithType, PointInterface } from "../../../types";
 
-export const usePoints = (): Array<Point> => {
+export const usePoints = (): Array<PointInterface> => {
   return useSelector(getPoints);
 };
 export const useOffers = (): Array<OfferWithType> => {

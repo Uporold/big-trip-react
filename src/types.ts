@@ -1,4 +1,4 @@
-export interface Point {
+export interface PointInterface {
   id: string;
   type: string;
   destination: Destination;
@@ -46,3 +46,6 @@ export interface UniqueDate {
   day: number;
   month: string;
 }
+
+export type SortType = `event` | `time` | `price`;
+export type FilterType = `everything` | `future` | `past`;

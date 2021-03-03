@@ -1,10 +1,15 @@
 import { AxiosResponse } from "axios";
 import { pointAdapter } from "../adapter/adapter";
-import { Destination, OfferWithType, Point, PointBackend } from "../../types";
+import {
+  Destination,
+  OfferWithType,
+  PointInterface,
+  PointBackend,
+} from "../../types";
 import { InferActionsTypes, BaseThunkActionType } from "../reducer";
 
 export const initialState = {
-  points: [] as Array<Point>,
+  points: [] as Array<PointInterface>,
   offers: [] as Array<OfferWithType>,
   destinations: [] as Array<Destination>,
 };
@@ -20,7 +25,7 @@ const ActionType = {
 } as const;
 
 export const ActionCreator = {
-  loadPoints: (points: Array<Point>) => {
+  loadPoints: (points: Array<PointInterface>) => {
     return {
       type: ActionType.LOAD_POINTS,
       payload: points,

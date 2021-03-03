@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { Point } from "../types";
+import { PointInterface } from "../types";
 
 interface Props {
-  points: Array<Point>;
+  points: Array<PointInterface>;
 }
 
-export const getTotalPrice = (array: Array<Point>): number => {
+export const getTotalPrice = (array: Array<PointInterface>): number => {
   let sum = 0;
   array.forEach((point) => {
     sum += point.basePrice;

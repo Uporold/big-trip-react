@@ -1,6 +1,6 @@
-import { Point, PointBackend } from "../../types";
+import { PointInterface, PointBackend } from "../../types";
 
-export const pointAdapter = (data: PointBackend): Point => {
+export const pointAdapter = (data: PointBackend): PointInterface => {
   return {
     id: data.id,
     type: data.type,
