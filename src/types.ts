@@ -47,5 +47,5 @@ export interface UniqueDate {
   month: string;
 }
 
-export type SortType = `event` | `time` | `price`;
+export type SortingType = `event` | `time` | `price`;
 export type FilterType = `everything` | `future` | `past`;

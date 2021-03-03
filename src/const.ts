@@ -1,4 +1,4 @@
-import { FilterType, SortType } from "./types";
+import { FilterType, SortingType } from "./types";
 
 export const URL = {
   POINTS: `points`,
@@ -34,7 +34,13 @@ export const months = [
 
 export const filters: FilterType[] = [`everything`, `future`, `past`];
 
-export const sortTypes: SortType[] = [`event`, `time`, `price`];
+export const sortTypes: SortingType[] = [`event`, `time`, `price`];
+
+export const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`,
+};
 
 export const typeItemsActivity = [`Check-in`, `Sightseeing`, `Restaurant`];
 

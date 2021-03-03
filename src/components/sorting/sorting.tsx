@@ -1,17 +1,19 @@
 import React from "react";
-import { SortType } from "../../types";
-import { sortTypes } from "../../const";
+import { SortingType } from "../../types";
+import { SortType, sortTypes } from "../../const";
 
 interface Props {
-  setSortTypeHandler: (sortType: SortType) => (evt: React.MouseEvent) => void;
-  currentSortType: string;
+  setSortTypeHandler: (
+    sortType: SortingType,
+  ) => (evt: React.MouseEvent) => void;
+  currentSortType: SortingType;
 }
 
 const Sorting: React.FC<Props> = ({
   setSortTypeHandler,
   currentSortType,
 }): JSX.Element => {
-  const checkbox = (sortType: SortType) => {
+  const checkbox = (sortType: SortingType) => {
     return (
       <div className={`trip-sort__item  trip-sort__item--${sortType}`}>
         <input
@@ -45,7 +47,7 @@ const Sorting: React.FC<Props> = ({
   return (
     <form className="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span className="trip-sort__item  trip-sort__item--day">
-        {currentSortType === `event` ? `Day` : ``}
+        {currentSortType === SortType.EVENT ? `Day` : ``}
       </span>
       {sortTypes.map((sortType) => checkbox(sortType))}
       <span className="trip-sort__item  trip-sort__item--offers">Offers</span>

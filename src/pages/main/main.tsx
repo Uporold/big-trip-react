@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import Header from "../../components/header/header";
 import Sorting from "../../components/sorting/sorting";
-import { SortType } from "../../types";
+import { SortingType } from "../../types";
 import DaysList from "../../components/days-list/days-list";
 
 const Main: React.FC = (): JSX.Element => {
-  const [currentSortType, setSortType] = useState<SortType>(`event`);
-  const setSortTypeHandler = (sortType: SortType) => (
+  const [currentSortType, setSortType] = useState<SortingType>(`event`);
+  const setSortTypeHandler = (sortType: SortingType) => (
     evt: React.MouseEvent,
   ) => {
     evt.preventDefault();
