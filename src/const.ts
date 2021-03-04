@@ -1,4 +1,10 @@
-import { FilterType, SortingType } from "./types";
+import {
+  DestinationInterface,
+  FilterType,
+  PointInterface,
+  SortingType,
+} from "./types";
+import { formatDate } from "./utils/time";
 
 export const URL = {
   POINTS: `points`,
@@ -42,6 +48,31 @@ export const SortType = {
   PRICE: `price`,
 };
 
-export const typeItemsActivity = [`Check-in`, `Sightseeing`, `Restaurant`];
+export const typeItemsTransfer = [
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+];
+
+export const typeItemsActivity = [`check-in`, `sightseeing`, `restaurant`];
 
 export const OFFERS_PREVIEW_LIMIT = 3;
+
+export const emptyPoint: PointInterface = {
+  id: "-1",
+  type: `bus`,
+  startDate: new Date(),
+  endDate: new Date(),
+  destination: {
+    name: ``,
+    description: ``,
+    pictures: [],
+  },
+  basePrice: 0,
+  offers: [],
+  isFavorite: false,
+};

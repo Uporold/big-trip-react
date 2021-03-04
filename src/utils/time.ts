@@ -10,6 +10,8 @@ export const formatTimeDiff = (endDate: Date, startDate: Date): string => {
   return dayjs.duration(timeDiff).format(timeDiffFormatted);
 };
 
-export const formatDate = (date: Date): string => {
-  return dayjs(date).format(`HH:mm`);
+export const formatDate = (date: Date, isForm?: boolean): string => {
+  return isForm
+    ? dayjs(date).format(`DD/MM/YY HH:mm`)
+    : dayjs(date).format(`HH:mm`);
 };

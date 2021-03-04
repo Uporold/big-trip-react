@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { pointAdapter } from "../adapter/adapter";
 import {
-  Destination,
+  DestinationInterface,
   OfferWithType,
   PointInterface,
   PointBackend,
@@ -11,7 +11,7 @@ import { InferActionsTypes, BaseThunkActionType } from "../reducer";
 export const initialState = {
   points: [] as Array<PointInterface>,
   offers: [] as Array<OfferWithType>,
-  destinations: [] as Array<Destination>,
+  destinations: [] as Array<DestinationInterface>,
 };
 
 type InitialStateType = typeof initialState;
@@ -39,7 +39,7 @@ export const ActionCreator = {
     };
   },
 
-  loadDestinations: (destinations: Array<Destination>) => {
+  loadDestinations: (destinations: Array<DestinationInterface>) => {
     return {
       type: ActionType.LOAD_DESTINATIONS,
       payload: destinations,
@@ -64,7 +64,7 @@ export const Operation = {
   },
 
   loadDestinations: (): ThunkActionType => async (dispatch, getState, api) => {
-    const response: AxiosResponse<Array<Destination>> = await api.get(
+    const response: AxiosResponse<Array<DestinationInterface>> = await api.get(
       `/destinations`,
     );
     dispatch(ActionCreator.loadDestinations(response.data));

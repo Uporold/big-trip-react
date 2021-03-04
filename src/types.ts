@@ -1,7 +1,7 @@
 export interface PointInterface {
   id: string;
   type: string;
-  destination: Destination;
+  destination: DestinationInterface;
   basePrice: number;
   startDate: Date;
   endDate: Date;
@@ -12,7 +12,7 @@ export interface PointInterface {
 export interface PointBackend {
   id: string;
   type: string;
-  destination: Destination;
+  destination: DestinationInterface;
   ["base_price"]: number;
   ["date_from"]: string;
   ["date_to"]: string;
@@ -20,15 +20,10 @@ export interface PointBackend {
   ["is_favorite"]: boolean;
 }
 
-export interface Destination {
+export interface DestinationInterface {
   description: string;
   name: string;
-  pictures:
-    | Array<{
-        src: string;
-        description: string;
-      }>
-    | Array<never>;
+  pictures: Picture[] | Array<never>;
 }
 
 export interface OfferWithType {
@@ -36,7 +31,12 @@ export interface OfferWithType {
   offers: Array<Offer> | Array<never>;
 }
 
-interface Offer {
+export interface Picture {
+  src: string;
+  description: string;
+}
+
+export interface Offer {
   title: string;
   price: number;
 }

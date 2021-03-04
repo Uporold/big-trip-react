@@ -9,7 +9,7 @@ const Header: React.FC = memo(function Header(): JSX.Element {
   const points = usePoints().sort(
     (a, b) => a.startDate.valueOf() - b.startDate.valueOf(),
   );
-  console.log(`header`);
+  console.log(points);
   return (
     <header className="page-header">
       <div className="page-body__container  page-header__container">

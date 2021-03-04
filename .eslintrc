@@ -34,6 +34,8 @@
     "import/prefer-default-export": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "react/button-has-type": ["error", {"reset": true}],
     "import/no-cycle": "off"
   }
 }

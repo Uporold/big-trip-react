@@ -3,6 +3,8 @@ import Header from "../../components/header/header";
 import Sorting from "../../components/sorting/sorting";
 import { SortingType } from "../../types";
 import DaysList from "../../components/days-list/days-list";
+import PointEdit from "../../components/point-edit/point-edit";
+import { emptyPoint } from "../../const";
 
 const Main: React.FC = (): JSX.Element => {
   const [currentSortType, setSortType] = useState<SortingType>(`event`);
@@ -25,6 +27,7 @@ const Main: React.FC = (): JSX.Element => {
               currentSortType={currentSortType}
             />
             <ul className="trip-days">
+              <PointEdit point={emptyPoint} />
               <DaysList currentSortType={currentSortType} />
             </ul>
           </section>

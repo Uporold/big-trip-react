@@ -1,6 +1,10 @@
 import { useSelector } from "react-redux";
 import { getDestinations, getOffers, getPoints } from "../selectors";
-import { Destination, OfferWithType, PointInterface } from "../../../types";
+import {
+  DestinationInterface,
+  OfferWithType,
+  PointInterface,
+} from "../../../types";
 
 export const usePoints = (): Array<PointInterface> => {
   return useSelector(getPoints);
@@ -8,6 +12,6 @@ export const usePoints = (): Array<PointInterface> => {
 export const useOffers = (): Array<OfferWithType> => {
   return useSelector(getOffers);
 };
-export const useDestinations = (): Array<Destination> => {
+export const useDestinations = (): Array<DestinationInterface> => {
   return useSelector(getDestinations);
 };
