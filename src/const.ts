@@ -76,3 +76,9 @@ export const emptyPoint: PointInterface = {
   offers: [],
   isFavorite: false,
 };
+
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};

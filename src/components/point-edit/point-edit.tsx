@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
-import { typeItemsTransfer, typeItemsActivity } from "../../const";
+import { typeItemsTransfer, typeItemsActivity, Mode } from "../../const";
 import { useDestinations, useOffers } from "../../redux/data/hooks/selectors";
 import { formatDate } from "../../utils/time";
 import { Offer, OfferWithType, PointInterface } from "../../types";
 import { capitalizeFirstLetter } from "../../utils/common";
 import Offers from "../offers/offers";
 import Destination from "../destination/destination";
+import { useMode } from "../../redux/app/hooks/selectors";
+import { useSetMode } from "../../redux/app/hooks/useSetMode";
+import { useSetActivePointId } from "../../redux/app/hooks/useSetActivePointId";
 
 dayjs.extend(customParseFormat);
 
@@ -21,6 +24,9 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const cities = allDestinations.map((destination) => destination.name);
   const [currentType, setType] = useState(point.type);
   const [currentCity, setCity] = useState(point.destination.name);
+  const mode = useMode();
+  const setMode = useSetMode();
+  const setActivePointId = useSetActivePointId();
 
   const typeOffersNew = allOffers.find(
     (it) => it.type.toLowerCase() === currentType,
@@ -30,9 +36,53 @@ const PointEdit: React.FC<Props> = ({ point }) => {
     (it) => it.name === currentCity,
   );
 
+  const cancelButtonHandler = () => {
+    if (mode === Mode.ADDING) {
+      setMode(Mode.DEFAULT);
+    }
+  };
+
+  const closeArrowHandler = () => {
+    setMode(Mode.DEFAULT);
+    setActivePointId(-1);
+  };
+
   const tempFunc = () => {
     return typeOffersNew !== undefined ? typeOffersNew.offers : [];
   };
+
+  const favoriteCheckboxAndCloseArrow = () => {
+    return (
+      <>
+        <input
+          id="event-favorite-1"
+          className="event__favorite-checkbox  visually-hidden"
+          type="checkbox"
+          name="event-favorite"
+          checked={point.isFavorite}
+        />
+        <label className="event__favorite-btn" htmlFor="event-favorite-1">
+          <span className="visually-hidden">Add to favorite</span>
+          <svg
+            className="event__favorite-icon"
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+          >
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z" />
+          </svg>
+        </label>
+        <button
+          className="event__rollup-btn"
+          type="button"
+          onClick={closeArrowHandler}
+        >
+          <span className="visually-hidden">Close event</span>
+        </button>
+      </>
+    );
+  };
+
   const createTypeItem = (type: string) => {
     return (
       <div className="event__type-item">
@@ -162,9 +212,14 @@ const PointEdit: React.FC<Props> = ({ point }) => {
         <button className="event__save-btn  btn  btn--blue" type="submit">
           Save
         </button>
-        <button className="event__reset-btn" type="reset">
-          Cancel
+        <button
+          className="event__reset-btn"
+          type="reset"
+          onClick={cancelButtonHandler}
+        >
+          {mode === Mode.ADDING ? `Cancel` : `Delete`}
         </button>
+        {mode === Mode.EDIT ? favoriteCheckboxAndCloseArrow() : ``}
       </header>
       <section className="event__details">
         {tempFunc().length ? (

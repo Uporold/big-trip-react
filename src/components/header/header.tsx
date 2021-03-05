@@ -4,12 +4,12 @@ import Trail from "../trail/trail";
 import Controls from "../controls";
 import Filter from "../filter/filter";
 import TotalPrice from "../total-price";
+import NewEventButton from "../new-event-button/new-event-button";
 
 const Header: React.FC = memo(function Header(): JSX.Element {
   const points = usePoints().sort(
     (a, b) => a.startDate.valueOf() - b.startDate.valueOf(),
   );
-  console.log(points);
   return (
     <header className="page-header">
       <div className="page-body__container  page-header__container">
@@ -33,12 +33,7 @@ const Header: React.FC = memo(function Header(): JSX.Element {
             <Filter />
           </div>
 
-          <button
-            className="trip-main__event-add-btn  btn  btn--big  btn--yellow"
-            type="button"
-          >
-            New event
-          </button>
+          <NewEventButton />
         </div>
       </div>
     </header>

@@ -1,7 +1,7 @@
 import { GlobalState } from "../reducer";
 
-export const getPoints = (state: GlobalState) => state.points;
+export const getPoints = (state: GlobalState) => state.DATA.points;
 
-export const getOffers = (state: GlobalState) => state.offers;
+export const getOffers = (state: GlobalState) => state.DATA.offers;
 
-export const getDestinations = (state: GlobalState) => state.destinations;
+export const getDestinations = (state: GlobalState) => state.DATA.destinations;

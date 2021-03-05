@@ -1,13 +1,17 @@
-import { Action } from "redux";
+import { Action, combineReducers } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { AxiosInstance } from "axios";
-import { reducer, ActionCreator as DataActions } from "./data/data";
+import { reducer as data, ActionCreator as DataActions } from "./data/data";
+import { reducer as app, ActionCreator as AppActions } from "./app/app";
 
-export const rootReducer = reducer;
+export const rootReducer = combineReducers({
+  DATA: data,
+  APP: app,
+});
 
 export type GlobalState = ReturnType<typeof rootReducer>;
 
-const combinedActions = { ...DataActions };
+const combinedActions = { ...DataActions, ...AppActions };
 export type AllReduxActions = ReturnType<
   InferActionsTypes<typeof combinedActions>
 >;
