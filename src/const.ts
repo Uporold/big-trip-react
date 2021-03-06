@@ -46,7 +46,7 @@ export const SortType = {
   EVENT: `event`,
   TIME: `time`,
   PRICE: `price`,
-};
+} as const;
 
 export const typeItemsTransfer = [
   `taxi`,

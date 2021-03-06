@@ -5,18 +5,19 @@ import { SortingType } from "../../types";
 import DaysList from "../../components/days-list/days-list";
 import PointEdit from "../../components/point-edit/point-edit";
 import { emptyPoint, Mode } from "../../const";
-import { useMode } from "../../redux/app/hooks/selectors";
+import { useCurrentSortType, useMode } from "../../redux/app/hooks/selectors";
+import { useSetSortType } from "../../redux/app/hooks/useSetSortType";
 
 const Main: React.FC = (): JSX.Element => {
-  const [currentSortType, setSortType] = useState<SortingType>(`event`);
   const mode = useMode();
+  const currentSortType = useCurrentSortType();
+  const setSortType = useSetSortType();
   const setSortTypeHandler = (sortType: SortingType) => (
     evt: React.MouseEvent,
   ) => {
     evt.preventDefault();
     setSortType(sortType);
   };
-
   return (
     <>
       <Header />
