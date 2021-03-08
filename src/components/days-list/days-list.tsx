@@ -1,23 +1,20 @@
 import React from "react";
-import { usePoints } from "../../redux/data/hooks/selectors";
+import { useSortedFilteredPoints } from "../../redux/data/hooks/selectors";
 import { getNoRepeatingDates } from "../trail/trail";
 import { SortingType, UniqueDate } from "../../types";
 import Point from "../point/point";
-import { getSortedPoints } from "../../utils/common";
 
 interface Props {
   currentSortType: SortingType;
 }
 
 const DaysList: React.FC<Props> = ({ currentSortType }): JSX.Element => {
-  const points = usePoints();
+  const points = useSortedFilteredPoints();
   const trailDates = getNoRepeatingDates(points);
-  const pointsBySort = getSortedPoints(points, currentSortType);
-
   const createTripDayItemMarkup = (date?: UniqueDate, index?: number) => {
     const pointsByDay = date
-      ? pointsBySort.filter((point) => point.startDate.getDate() === date.day)
-      : pointsBySort;
+      ? points.filter((point) => point.startDate.getDate() === date.day)
+      : points;
     return (
       <li className="trip-days__item  day">
         <div className="day__info">

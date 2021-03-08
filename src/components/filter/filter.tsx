@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { filters } from "../../const";
 import { FilterType } from "../../types";
+import { useSetFilterType } from "../../redux/app/hooks/useSetFilterType";
+import { useCurrentFilterType } from "../../redux/app/hooks/selectors";
 
 const Filter: React.FC = (): JSX.Element => {
-  const [currentFilter, setFilter] = useState<FilterType>(`everything`);
+  const setFilter = useSetFilterType();
+  const currentFilter = useCurrentFilterType();
   const setFilterHandler = (filter: FilterType) => (evt: React.MouseEvent) => {
     evt.preventDefault();
     setFilter(filter);

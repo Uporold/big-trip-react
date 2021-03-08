@@ -48,6 +48,12 @@ export const SortType = {
   PRICE: `price`,
 } as const;
 
+export const Filter = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+} as const;
+
 export const typeItemsTransfer = [
   `taxi`,
   `bus`,

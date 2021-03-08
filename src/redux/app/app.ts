@@ -1,9 +1,10 @@
 import { InferActionsTypes } from "../reducer";
-import { Mode, SortType } from "../../const";
-import { SortingType } from "../../types";
+import { Filter, Mode, SortType } from "../../const";
+import { FilterType, SortingType } from "../../types";
 
 export const initialState = {
   currentSortType: SortType.EVENT as SortingType,
+  currentFilterType: Filter.EVERYTHING as FilterType,
   mode: Mode.DEFAULT as string,
   activePointId: -1 as number,
 };
@@ -12,12 +13,20 @@ type InitialStateType = typeof initialState;
 type AppActionTypes = ReturnType<InferActionsTypes<typeof ActionCreator>>;
 
 const ActionType = {
+  SET_FILTER_TYPE: `SET_FILTER_TYPE`,
   SET_SORT_TYPE: `SET_SORT_TYPE`,
   SET_MODE: `SET_MODE`,
   SET_ACTIVE_POINT_ID: `SET_ACTIVE_POINT_ID`,
 } as const;
 
 export const ActionCreator = {
+  setFilterType: (filterType: FilterType) => {
+    return {
+      type: ActionType.SET_FILTER_TYPE,
+      payload: filterType,
+    };
+  },
+
   setSortType: (sortType: SortingType) => {
     return {
       type: ActionType.SET_SORT_TYPE,
@@ -49,7 +58,6 @@ export const reducer = (
       return {
         ...state,
         mode: action.payload,
-        currentSortType: SortType.EVENT,
       };
     case ActionType.SET_ACTIVE_POINT_ID:
       return { ...state, activePointId: action.payload };
@@ -57,6 +65,14 @@ export const reducer = (
       return {
         ...state,
         currentSortType: action.payload,
+        activePointId: -1,
+        mode: Mode.DEFAULT,
+      };
+    case ActionType.SET_FILTER_TYPE:
+      return {
+        ...state,
+        currentFilterType: action.payload,
+        currentSortType: SortType.EVENT,
         activePointId: -1,
         mode: Mode.DEFAULT,
       };

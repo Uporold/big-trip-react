@@ -3,9 +3,8 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import { typeItemsTransfer, typeItemsActivity, Mode } from "../../const";
 import { useDestinations, useOffers } from "../../redux/data/hooks/selectors";
-import { formatDate } from "../../utils/time";
-import { Offer, OfferWithType, PointInterface } from "../../types";
-import { capitalizeFirstLetter } from "../../utils/common";
+import { ensure, capitalizeFirstLetter } from "../../utils/common";
+import { PointInterface } from "../../types";
 import Offers from "../offers/offers";
 import Destination from "../destination/destination";
 import { useMode } from "../../redux/app/hooks/selectors";
@@ -28,9 +27,9 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const setMode = useSetMode();
   const setActivePointId = useSetActivePointId();
 
-  const typeOffersNew = allOffers.find(
-    (it) => it.type.toLowerCase() === currentType,
-  );
+  const selectedTypeOffers = ensure(
+    allOffers.find((it) => it.type.toLowerCase() === currentType),
+  ).offers;
 
   const currentDestination = allDestinations.find(
     (it) => it.name === currentCity,
@@ -45,10 +44,6 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const closeArrowHandler = () => {
     setMode(Mode.DEFAULT);
     setActivePointId(-1);
-  };
-
-  const tempFunc = () => {
-    return typeOffersNew !== undefined ? typeOffersNew.offers : [];
   };
 
   const favoriteCheckboxAndCloseArrow = () => {
@@ -222,8 +217,11 @@ const PointEdit: React.FC<Props> = ({ point }) => {
         {mode === Mode.EDIT ? favoriteCheckboxAndCloseArrow() : ``}
       </header>
       <section className="event__details">
-        {tempFunc().length ? (
-          <Offers selectedOffers={point.offers} typeOffers={tempFunc()} />
+        {selectedTypeOffers.length ? (
+          <Offers
+            selectedOffers={point.offers}
+            typeOffers={selectedTypeOffers}
+          />
         ) : (
           ``
         )}

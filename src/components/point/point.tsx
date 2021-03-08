@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo } from "react";
 import { capitalizeFirstLetter } from "../../utils/common";
 import { PointInterface } from "../../types";
 import { Mode, OFFERS_PREVIEW_LIMIT, typeItemsActivity } from "../../const";
@@ -12,7 +12,7 @@ interface Props {
   point: PointInterface;
 }
 
-const Point: React.FC<Props> = ({ point }) => {
+const Point: React.FC<Props> = memo(({ point }) => {
   const {
     id,
     type,
@@ -99,6 +99,6 @@ const Point: React.FC<Props> = ({ point }) => {
       )}
     </>
   );
-};
+});
 
 export default Point;
