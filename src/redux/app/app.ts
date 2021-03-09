@@ -7,6 +7,8 @@ export const initialState = {
   currentFilterType: Filter.EVERYTHING as FilterType,
   mode: Mode.DEFAULT as string,
   activePointId: -1 as number,
+  isFormBlocked: false,
+  isFormError: false,
 };
 
 type InitialStateType = typeof initialState;

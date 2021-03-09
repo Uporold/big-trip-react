@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import { typeItemsTransfer, typeItemsActivity, Mode } from "../../const";
-import { useDestinations, useOffers } from "../../redux/data/hooks/selectors";
+import {
+  useDestinations,
+  useFormBlockedStatus,
+  useFormErrorStatus,
+  useOffers,
+} from "../../redux/data/hooks/selectors";
 import { ensure, capitalizeFirstLetter } from "../../utils/common";
 import { PointInterface } from "../../types";
 import Offers from "../offers/offers";
@@ -10,12 +15,26 @@ import Destination from "../destination/destination";
 import { useMode } from "../../redux/app/hooks/selectors";
 import { useSetMode } from "../../redux/app/hooks/useSetMode";
 import { useSetActivePointId } from "../../redux/app/hooks/useSetActivePointId";
+import { useDeletePoint } from "../../redux/data/hooks/useDeletePoint";
 
 dayjs.extend(customParseFormat);
 
 interface Props {
   point: PointInterface;
 }
+
+const styles = {
+  width: `100%`,
+  height: `100%`,
+  padding: `0`,
+  minInlineSize: `auto`,
+  border: `none`,
+} as React.CSSProperties;
+
+const shakeStyle = {
+  boxShadow: `0px 0px 15px 0px rgba(245,32,32,1)`,
+  animation: `shake 0.6s`,
+} as React.CSSProperties;
 
 const PointEdit: React.FC<Props> = ({ point }) => {
   const allDestinations = useDestinations();
@@ -26,6 +45,10 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const mode = useMode();
   const setMode = useSetMode();
   const setActivePointId = useSetActivePointId();
+  const deletePoint = useDeletePoint();
+
+  const isFormBlocked = useFormBlockedStatus();
+  const isFormError = useFormErrorStatus();
 
   const selectedTypeOffers = ensure(
     allOffers.find((it) => it.type.toLowerCase() === currentType),
@@ -38,6 +61,9 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const cancelButtonHandler = () => {
     if (mode === Mode.ADDING) {
       setMode(Mode.DEFAULT);
+    }
+    if (mode === Mode.EDIT) {
+      deletePoint(Number(point.id));
     }
   };
 
@@ -106,127 +132,132 @@ const PointEdit: React.FC<Props> = ({ point }) => {
       className="trip-events__item  event  event--edit"
       action="#"
       method="post"
+      style={isFormError ? shakeStyle : {}}
     >
-      <header className="event__header">
-        <div className="event__type-wrapper">
-          <label
-            className="event__type  event__type-btn"
-            htmlFor="event-type-toggle-1"
-          >
-            <span className="visually-hidden">Choose event type</span>
-            <img
-              className="event__type-icon"
-              width="17"
-              height="17"
-              src={`img/icons/${currentType}.png`}
-              alt="Event type icon"
+      <fieldset style={styles} disabled={isFormBlocked}>
+        <header className="event__header">
+          <div className="event__type-wrapper">
+            <label
+              className="event__type  event__type-btn"
+              htmlFor="event-type-toggle-1"
+            >
+              <span className="visually-hidden">Choose event type</span>
+              <img
+                className="event__type-icon"
+                width="17"
+                height="17"
+                src={`img/icons/${currentType}.png`}
+                alt="Event type icon"
+              />
+            </label>
+            <input
+              className="event__type-toggle  visually-hidden"
+              id="event-type-toggle-1"
+              type="checkbox"
             />
-          </label>
-          <input
-            className="event__type-toggle  visually-hidden"
-            id="event-type-toggle-1"
-            type="checkbox"
-          />
 
-          <div className="event__type-list">
-            <fieldset className="event__type-group">
-              <legend className="visually-hidden">Transfer</legend>
-              {typeItemsTransfer.map((item) => createTypeItem(item))}
-            </fieldset>
+            <div className="event__type-list">
+              <fieldset className="event__type-group">
+                <legend className="visually-hidden">Transfer</legend>
+                {typeItemsTransfer.map((item) => createTypeItem(item))}
+              </fieldset>
 
-            <fieldset className="event__type-group">
-              <legend className="visually-hidden">Activity</legend>
-              {typeItemsActivity.map((item) => createTypeItem(item))}
-            </fieldset>
+              <fieldset className="event__type-group">
+                <legend className="visually-hidden">Activity</legend>
+                {typeItemsActivity.map((item) => createTypeItem(item))}
+              </fieldset>
+            </div>
           </div>
-        </div>
 
-        <div className="event__field-group  event__field-group--destination">
-          <label
-            className="event__label  event__type-output"
-            htmlFor="event-destination-1"
+          <div className="event__field-group  event__field-group--destination">
+            <label
+              className="event__label  event__type-output"
+              htmlFor="event-destination-1"
+            >
+              {capitalizeFirstLetter(currentType)} to
+            </label>
+            <input
+              className="event__input  event__input--destination"
+              id="event-destination-1"
+              type="text"
+              name="event-destination"
+              value={currentCity}
+              list="destination-list-1"
+              onChange={(evt) => {
+                setCity(evt.target.value);
+              }}
+            />
+            <datalist id="destination-list-1">
+              {cities.map((city) => (
+                <option value={city} />
+              ))}
+            </datalist>
+          </div>
+
+          <div className="event__field-group  event__field-group--time">
+            <label className="visually-hidden" htmlFor="event-start-time-1">
+              From
+            </label>
+            <input
+              className="event__input  event__input--time"
+              id="event-start-time-1"
+              type="text"
+              name="event-start-time"
+              value="18/03/19 00:00"
+            />
+            &mdash;
+            <label className="visually-hidden" htmlFor="event-end-time-1">
+              To
+            </label>
+            <input
+              className="event__input  event__input--time"
+              id="event-end-time-1"
+              type="text"
+              name="event-end-time"
+              value="18/03/19 00:00"
+            />
+          </div>
+
+          <div className="event__field-group  event__field-group--price">
+            <label className="event__label" htmlFor="event-price-1">
+              <span className="visually-hidden">Price</span>
+              &euro;
+            </label>
+            <input
+              className="event__input  event__input--price"
+              id="event-price-1"
+              type="text"
+              name="event-price"
+              value=""
+            />
+          </div>
+
+          <button className="event__save-btn  btn  btn--blue" type="submit">
+            Save
+          </button>
+          <button
+            className="event__reset-btn"
+            type="reset"
+            onClick={cancelButtonHandler}
           >
-            {capitalizeFirstLetter(currentType)} to
-          </label>
-          <input
-            className="event__input  event__input--destination"
-            id="event-destination-1"
-            type="text"
-            name="event-destination"
-            value={currentCity}
-            list="destination-list-1"
-            onChange={(evt) => {
-              setCity(evt.target.value);
-            }}
-          />
-          <datalist id="destination-list-1">
-            {cities.map((city) => (
-              <option value={city} />
-            ))}
-          </datalist>
-        </div>
-
-        <div className="event__field-group  event__field-group--time">
-          <label className="visually-hidden" htmlFor="event-start-time-1">
-            From
-          </label>
-          <input
-            className="event__input  event__input--time"
-            id="event-start-time-1"
-            type="text"
-            name="event-start-time"
-            value="18/03/19 00:00"
-          />
-          &mdash;
-          <label className="visually-hidden" htmlFor="event-end-time-1">
-            To
-          </label>
-          <input
-            className="event__input  event__input--time"
-            id="event-end-time-1"
-            type="text"
-            name="event-end-time"
-            value="18/03/19 00:00"
-          />
-        </div>
-
-        <div className="event__field-group  event__field-group--price">
-          <label className="event__label" htmlFor="event-price-1">
-            <span className="visually-hidden">Price</span>
-            &euro;
-          </label>
-          <input
-            className="event__input  event__input--price"
-            id="event-price-1"
-            type="text"
-            name="event-price"
-            value=""
-          />
-        </div>
-
-        <button className="event__save-btn  btn  btn--blue" type="submit">
-          Save
-        </button>
-        <button
-          className="event__reset-btn"
-          type="reset"
-          onClick={cancelButtonHandler}
-        >
-          {mode === Mode.ADDING ? `Cancel` : `Delete`}
-        </button>
-        {mode === Mode.EDIT ? favoriteCheckboxAndCloseArrow() : ``}
-      </header>
-      <section className="event__details">
-        {selectedTypeOffers.length ? (
-          <Offers
-            selectedOffers={point.offers}
-            typeOffers={selectedTypeOffers}
-          />
-        ) : (
-          ``
-        )}
-        {currentDestination && <Destination destination={currentDestination} />}
-      </section>
+            {mode === Mode.ADDING ? `Cancel` : `Delete`}
+          </button>
+          {mode === Mode.EDIT ? favoriteCheckboxAndCloseArrow() : ``}
+        </header>
+        <section className="event__details">
+          {selectedTypeOffers.length ? (
+            <Offers
+              selectedOffers={point.offers}
+              typeOffers={selectedTypeOffers}
+            />
+          ) : (
+            ``
+          )}
+          {currentDestination && (
+            <Destination destination={currentDestination} />
+          )}
+        </section>
+      </fieldset>
     </form>
   );
 };

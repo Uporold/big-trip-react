@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import {
   getDestinations,
+  getFormBlockedStatus,
+  getFormErrorStatus,
   getOffers,
   getPoints,
   getSortedFilteredPoints,
@@ -23,4 +25,12 @@ export const useDestinations = (): Array<DestinationInterface> => {
 
 export const useSortedFilteredPoints = (): Array<PointInterface> => {
   return useSelector(getSortedFilteredPoints);
+};
+
+export const useFormBlockedStatus = (): boolean => {
+  return useSelector(getFormBlockedStatus);
+};
+
+export const useFormErrorStatus = (): boolean => {
+  return useSelector(getFormErrorStatus);
 };
