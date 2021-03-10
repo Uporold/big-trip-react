@@ -1,6 +1,5 @@
 import { AxiosResponse } from "axios";
-import { pointAdapter } from "../adapter/adapter";
-import { ActionCreator as AppAction } from "../app/app";
+import { pointAdapter, toRawPoint } from "../adapter/adapter";
 import {
   DestinationInterface,
   OfferWithType,
@@ -26,6 +25,7 @@ const ActionType = {
   LOAD_OFFERS: `LOAD_OFFERS`,
   LOAD_DESTINATIONS: `LOAD_DESTINATIONS`,
   DELETE_POINT: `DELETE_POINT`,
+  CHANGE_POINT_FAVORITE_STATUS: `CHANGE_POINT_FAVORITE_STATUS`,
   SET_FORM_BLOCK_STATUS: `SET_FORM_BLOCK_STATUS`,
   SET_ERROR_FORM_STATUS: `SET_ERROR_FORM`,
 } as const;
@@ -56,6 +56,13 @@ export const ActionCreator = {
     return {
       type: ActionType.DELETE_POINT,
       payload: id,
+    };
+  },
+
+  changePointFavoriteStatus: (point: PointInterface) => {
+    return {
+      type: ActionType.CHANGE_POINT_FAVORITE_STATUS,
+      payload: point,
     };
   },
 
@@ -113,6 +120,23 @@ export const Operation = {
       setTimeout(() => dispatch(ActionCreator.setErrorFormStatus(false)), 600);
     }
   },
+
+  changePointFavoriteStatus: (
+    point: PointInterface,
+    status: boolean,
+  ): ThunkActionType => async (dispatch, getState, api) => {
+    try {
+      const data = toRawPoint(point);
+      data.is_favorite = status;
+      const response = await api.put(`/points/${point.id}`, data);
+      dispatch(
+        ActionCreator.changePointFavoriteStatus(pointAdapter(response.data)),
+      );
+    } catch (err) {
+      dispatch(ActionCreator.setErrorFormStatus(true));
+      setTimeout(() => dispatch(ActionCreator.setErrorFormStatus(false)), 600);
+    }
+  },
 };
 
 export const reducer = (
@@ -131,6 +155,13 @@ export const reducer = (
         ...state,
         points: state.points.filter(
           (point) => Number(point.id) !== action.payload,
+        ),
+      };
+    case ActionType.CHANGE_POINT_FAVORITE_STATUS:
+      return {
+        ...state,
+        points: state.points.map((item) =>
+          item.id === action.payload.id ? action.payload : item,
         ),
       };
     case ActionType.SET_FORM_BLOCK_STATUS:

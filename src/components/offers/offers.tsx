@@ -1,12 +1,17 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
 import { Offer } from "../../types";
 
 interface Props {
   selectedOffers: Offer[];
   typeOffers: Offer[];
+  handleOfferClick: (formOffer: Offer) => (event: React.MouseEvent) => void;
 }
 
-const createOfferSelectorMarkup = (offer: Offer, selectedOffers: Offer[]) => {
+const createOfferSelectorMarkup = (
+  offer: Offer,
+  selectedOffers: Offer[],
+  handleOfferClick: (formOffer: Offer) => (event: React.MouseEvent) => void,
+) => {
   const isChecked = () =>
     selectedOffers.some((selectedOffer) => selectedOffer.title === offer.title);
   return (
@@ -20,7 +25,8 @@ const createOfferSelectorMarkup = (offer: Offer, selectedOffers: Offer[]) => {
         value={offer.title}
         data-price={offer.price}
       />
-      <label className="event__offer-label">
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
+      <label className="event__offer-label" onClick={handleOfferClick(offer)}>
         <span className="event__offer-title">{offer.title}</span>+ €
         <span className="event__offer-price">{offer.price}</span>
       </label>
@@ -28,9 +34,13 @@ const createOfferSelectorMarkup = (offer: Offer, selectedOffers: Offer[]) => {
   );
 };
 
-const Offers: React.FC<Props> = ({ selectedOffers, typeOffers }) => {
+const Offers: React.FC<Props> = memo(function Offers({
+  selectedOffers,
+  typeOffers,
+  handleOfferClick,
+}) {
   const selectorMarkup = typeOffers.map((offer) =>
-    createOfferSelectorMarkup(offer, selectedOffers),
+    createOfferSelectorMarkup(offer, selectedOffers, handleOfferClick),
   );
   return (
     <section className="event__section  event__section--offers">
@@ -40,6 +50,6 @@ const Offers: React.FC<Props> = ({ selectedOffers, typeOffers }) => {
       <div className="event__available-offers">{selectorMarkup}</div>
     </section>
   );
-};
+});
 
 export default Offers;

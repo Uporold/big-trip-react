@@ -12,3 +12,16 @@ export const pointAdapter = (data: PointBackend): PointInterface => {
     isFavorite: data.is_favorite,
   };
 };
+
+export const toRawPoint = (data: PointInterface): PointBackend => {
+  return {
+    id: data.id,
+    type: data.type,
+    destination: data.destination,
+    base_price: data.basePrice,
+    date_from: data.startDate.toDateString(),
+    date_to: data.endDate.toDateString(),
+    offers: data.offers,
+    is_favorite: data.isFavorite,
+  };
+};

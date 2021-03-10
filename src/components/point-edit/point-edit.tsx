@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import { typeItemsTransfer, typeItemsActivity, Mode } from "../../const";
@@ -9,13 +9,15 @@ import {
   useOffers,
 } from "../../redux/data/hooks/selectors";
 import { ensure, capitalizeFirstLetter } from "../../utils/common";
-import { PointInterface } from "../../types";
+import { Offer, PointInterface } from "../../types";
 import Offers from "../offers/offers";
 import Destination from "../destination/destination";
 import { useMode } from "../../redux/app/hooks/selectors";
 import { useSetMode } from "../../redux/app/hooks/useSetMode";
 import { useSetActivePointId } from "../../redux/app/hooks/useSetActivePointId";
 import { useDeletePoint } from "../../redux/data/hooks/useDeletePoint";
+import { formatDate } from "../../utils/time";
+import { useChangePointFavoriteStatus } from "../../redux/data/hooks/useChangePointFavoriteStatus";
 
 dayjs.extend(customParseFormat);
 
@@ -40,15 +42,47 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const allDestinations = useDestinations();
   const allOffers = useOffers();
   const cities = allDestinations.map((destination) => destination.name);
+
   const [currentType, setType] = useState(point.type);
   const [currentCity, setCity] = useState(point.destination.name);
+  const [stateOffers, setOffers] = useState(point.offers);
+  const [currentPrice, setPrice] = useState(point.basePrice);
+
+  const changePointFavoriteStatus = useChangePointFavoriteStatus();
+
   const mode = useMode();
   const setMode = useSetMode();
+
   const setActivePointId = useSetActivePointId();
   const deletePoint = useDeletePoint();
 
   const isFormBlocked = useFormBlockedStatus();
   const isFormError = useFormErrorStatus();
+
+  const startDate = formatDate(point.startDate, true);
+  const endDate = formatDate(point.endDate, true);
+
+  useEffect(() => {
+    if (currentType !== point.type) {
+      setOffers([]);
+    }
+  }, [currentType, point.type]);
+
+  const handleOfferClick = useCallback(
+    (formOffer: Offer) => (_: React.MouseEvent) => {
+      if (stateOffers.some((offer) => offer.title === formOffer.title)) {
+        setOffers(
+          stateOffers.filter((offer) => offer.title !== formOffer.title),
+        );
+      } else {
+        setOffers([
+          ...stateOffers,
+          { title: formOffer.title, price: formOffer.price },
+        ]);
+      }
+    },
+    [stateOffers],
+  );
 
   const selectedTypeOffers = ensure(
     allOffers.find((it) => it.type.toLowerCase() === currentType),
@@ -57,7 +91,6 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const currentDestination = allDestinations.find(
     (it) => it.name === currentCity,
   );
-
   const cancelButtonHandler = () => {
     if (mode === Mode.ADDING) {
       setMode(Mode.DEFAULT);
@@ -72,6 +105,10 @@ const PointEdit: React.FC<Props> = ({ point }) => {
     setActivePointId(-1);
   };
 
+  const priceHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setPrice(+evt.target.value);
+  };
+
   const favoriteCheckboxAndCloseArrow = () => {
     return (
       <>
@@ -82,7 +119,15 @@ const PointEdit: React.FC<Props> = ({ point }) => {
           name="event-favorite"
           checked={point.isFavorite}
         />
-        <label className="event__favorite-btn" htmlFor="event-favorite-1">
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
+        <label
+          className="event__favorite-btn"
+          htmlFor="event-favorite-1"
+          onClick={() => {
+            // setFavoriteStatus(!isFavorite);
+            changePointFavoriteStatus(point, !point.isFavorite);
+          }}
+        >
           <span className="visually-hidden">Add to favorite</span>
           <svg
             className="event__favorite-icon"
@@ -127,6 +172,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
       </div>
     );
   };
+
   return (
     <form
       className="trip-events__item  event  event--edit"
@@ -203,7 +249,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
               id="event-start-time-1"
               type="text"
               name="event-start-time"
-              value="18/03/19 00:00"
+              value={startDate}
             />
             &mdash;
             <label className="visually-hidden" htmlFor="event-end-time-1">
@@ -214,7 +260,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
               id="event-end-time-1"
               type="text"
               name="event-end-time"
-              value="18/03/19 00:00"
+              value={endDate}
             />
           </div>
 
@@ -228,7 +274,8 @@ const PointEdit: React.FC<Props> = ({ point }) => {
               id="event-price-1"
               type="text"
               name="event-price"
-              value=""
+              value={currentPrice}
+              onChange={priceHandler}
             />
           </div>
 
@@ -247,8 +294,9 @@ const PointEdit: React.FC<Props> = ({ point }) => {
         <section className="event__details">
           {selectedTypeOffers.length ? (
             <Offers
-              selectedOffers={point.offers}
+              selectedOffers={stateOffers}
               typeOffers={selectedTypeOffers}
+              handleOfferClick={handleOfferClick}
             />
           ) : (
             ``
