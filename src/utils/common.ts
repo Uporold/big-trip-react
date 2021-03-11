@@ -9,19 +9,21 @@ export const getSortedPoints = (
   points: PointInterface[],
   sortType: SortingType,
 ) => {
-  const showingEvents = points.slice();
+  const showingPoints = points.slice();
   switch (sortType) {
     case SortType.PRICE:
-      return showingEvents.sort((a, b) => b.basePrice - a.basePrice);
+      return showingPoints.sort((a, b) => b.basePrice - a.basePrice);
     case SortType.TIME:
-      return showingEvents.sort(
+      return showingPoints.sort(
         (a, b) =>
           b.endDate.valueOf() -
           b.startDate.valueOf() -
           (a.endDate.valueOf() - a.startDate.valueOf()),
       );
     default:
-      return points;
+      return showingPoints.sort(
+        (a, b) => a.startDate.valueOf() - b.startDate.valueOf(),
+      );
   }
 };
 

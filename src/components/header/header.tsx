@@ -7,10 +7,9 @@ import TotalPrice from "../total-price";
 import NewEventButton from "../new-event-button/new-event-button";
 
 const Header: React.FC = memo(function Header(): JSX.Element {
-  const points = usePoints().sort(
-    (a, b) => a.startDate.valueOf() - b.startDate.valueOf(),
-  );
-  console.log(`header`);
+  const points = usePoints()
+    .slice()
+    .sort((a, b) => a.startDate.valueOf() - b.startDate.valueOf());
   return (
     <header className="page-header">
       <div className="page-body__container  page-header__container">
