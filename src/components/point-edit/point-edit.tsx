@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import dayjs from "dayjs";
+import Flatpickr from "react-flatpickr";
 import { typeItemsTransfer, typeItemsActivity, Mode } from "../../const";
 import {
   useDestinations,
@@ -9,17 +8,21 @@ import {
   useOffers,
 } from "../../redux/data/hooks/selectors";
 import { ensure, capitalizeFirstLetter } from "../../utils/common";
-import { Offer, PointInterface } from "../../types";
+import {
+  DestinationInterface,
+  Offer,
+  PointBackend,
+  PointInterface,
+} from "../../types";
 import Offers from "../offers/offers";
 import Destination from "../destination/destination";
 import { useMode } from "../../redux/app/hooks/selectors";
 import { useSetMode } from "../../redux/app/hooks/useSetMode";
 import { useSetActivePointId } from "../../redux/app/hooks/useSetActivePointId";
 import { useDeletePoint } from "../../redux/data/hooks/useDeletePoint";
-import { formatDate } from "../../utils/time";
 import { useChangePointFavoriteStatus } from "../../redux/data/hooks/useChangePointFavoriteStatus";
-
-dayjs.extend(customParseFormat);
+import "flatpickr/dist/flatpickr.min.css";
+import { useCreatePoint } from "../../redux/data/hooks/useCreatePoint";
 
 interface Props {
   point: PointInterface;
@@ -43,6 +46,8 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const allOffers = useOffers();
   const cities = allDestinations.map((destination) => destination.name);
 
+  const createPoint = useCreatePoint();
+
   const [currentType, setType] = useState(point.type);
   const [currentCity, setCity] = useState(point.destination.name);
   const [stateOffers, setOffers] = useState(point.offers);
@@ -59,8 +64,8 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const isFormBlocked = useFormBlockedStatus();
   const isFormError = useFormErrorStatus();
 
-  const startDate = formatDate(point.startDate, true);
-  const endDate = formatDate(point.endDate, true);
+  const [startDate, setStartDate] = useState(point.startDate);
+  const [endDate, setEndDate] = useState(point.endDate);
 
   useEffect(() => {
     if (currentType !== point.type) {
@@ -91,6 +96,18 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const currentDestination = allDestinations.find(
     (it) => it.name === currentCity,
   );
+
+  const parseData: PointBackend = {
+    id: point.id || new Date().valueOf().toString(),
+    type: currentType,
+    destination: currentDestination as DestinationInterface,
+    base_price: currentPrice,
+    date_from: startDate.toJSON(),
+    date_to: endDate.toJSON(),
+    offers: stateOffers,
+    is_favorite: point.isFavorite,
+  };
+
   const cancelButtonHandler = () => {
     if (mode === Mode.ADDING) {
       setMode(Mode.DEFAULT);
@@ -98,6 +115,16 @@ const PointEdit: React.FC<Props> = ({ point }) => {
     if (mode === Mode.EDIT) {
       deletePoint(Number(point.id));
     }
+  };
+
+  const submitFormHandler = (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    if (mode === Mode.ADDING) {
+      createPoint(parseData);
+    }
+    // if (mode === Mode.EDIT) {
+    //   // todo
+    // }
   };
 
   const closeArrowHandler = () => {
@@ -124,7 +151,6 @@ const PointEdit: React.FC<Props> = ({ point }) => {
           className="event__favorite-btn"
           htmlFor="event-favorite-1"
           onClick={() => {
-            // setFavoriteStatus(!isFavorite);
             changePointFavoriteStatus(point, !point.isFavorite);
           }}
         >
@@ -179,6 +205,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
       action="#"
       method="post"
       style={isFormError ? shakeStyle : {}}
+      onSubmit={submitFormHandler}
     >
       <fieldset style={styles} disabled={isFormBlocked}>
         <header className="event__header">
@@ -244,10 +271,19 @@ const PointEdit: React.FC<Props> = ({ point }) => {
             <label className="visually-hidden" htmlFor="event-start-time-1">
               From
             </label>
-            <input
+            <Flatpickr
+              data-enable-time
               className="event__input  event__input--time"
-              id="event-start-time-1"
-              type="text"
+              options={{
+                dateFormat: `d/m/y H:i`,
+                minDate: point.startDate || `today`,
+              }}
+              onChange={(date) => {
+                if (date[0] > endDate) {
+                  setEndDate(date[0]);
+                }
+                setStartDate(date[0]);
+              }}
               name="event-start-time"
               value={startDate}
             />
@@ -255,11 +291,17 @@ const PointEdit: React.FC<Props> = ({ point }) => {
             <label className="visually-hidden" htmlFor="event-end-time-1">
               To
             </label>
-            <input
+            <Flatpickr
+              data-enable-time
               className="event__input  event__input--time"
-              id="event-end-time-1"
-              type="text"
+              options={{
+                dateFormat: `d/m/y H:i`,
+                minDate: startDate || `today`,
+              }}
               name="event-end-time"
+              onChange={(date) => {
+                setEndDate(date[0]);
+              }}
               value={endDate}
             />
           </div>
@@ -279,7 +321,11 @@ const PointEdit: React.FC<Props> = ({ point }) => {
             />
           </div>
 
-          <button className="event__save-btn  btn  btn--blue" type="submit">
+          <button
+            className="event__save-btn  btn  btn--blue"
+            type="submit"
+            disabled={endDate < startDate}
+          >
             Save
           </button>
           <button

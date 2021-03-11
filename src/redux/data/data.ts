@@ -1,12 +1,13 @@
 import { AxiosResponse } from "axios";
 import { pointAdapter, toRawPoint } from "../adapter/adapter";
+import { ActionCreator as AppActionCreator } from "../app/app";
 import {
   DestinationInterface,
   OfferWithType,
   PointInterface,
   PointBackend,
 } from "../../types";
-import { InferActionsTypes, BaseThunkActionType } from "../reducer";
+import { BaseThunkActionType, AllReduxActions } from "../reducer";
 
 export const initialState = {
   points: [] as Array<PointInterface>,
@@ -17,14 +18,14 @@ export const initialState = {
 };
 
 type InitialStateType = typeof initialState;
-type DataActionTypes = ReturnType<InferActionsTypes<typeof ActionCreator>>;
-type ThunkActionType = BaseThunkActionType<DataActionTypes>;
+type ThunkActionType = BaseThunkActionType<AllReduxActions>;
 
 const ActionType = {
   LOAD_POINTS: `LOAD_POINTS`,
   LOAD_OFFERS: `LOAD_OFFERS`,
   LOAD_DESTINATIONS: `LOAD_DESTINATIONS`,
   DELETE_POINT: `DELETE_POINT`,
+  CREATE_POINT: `CREATE_POINT`,
   CHANGE_POINT_FAVORITE_STATUS: `CHANGE_POINT_FAVORITE_STATUS`,
   SET_FORM_BLOCK_STATUS: `SET_FORM_BLOCK_STATUS`,
   SET_ERROR_FORM_STATUS: `SET_ERROR_FORM`,
@@ -56,6 +57,13 @@ export const ActionCreator = {
     return {
       type: ActionType.DELETE_POINT,
       payload: id,
+    };
+  },
+
+  createPoint: (point: PointInterface) => {
+    return {
+      type: ActionType.CREATE_POINT,
+      payload: point,
     };
   },
 
@@ -121,6 +129,24 @@ export const Operation = {
     }
   },
 
+  createPoint: (data: PointBackend): ThunkActionType => async (
+    dispatch,
+    getState,
+    api,
+  ) => {
+    dispatch(ActionCreator.setFormBlockStatus(true));
+    try {
+      const response = await api.post(`/points`, data);
+      dispatch(ActionCreator.createPoint(pointAdapter(response.data)));
+      dispatch(ActionCreator.setFormBlockStatus(false));
+      dispatch(AppActionCreator.setMode(`default`));
+    } catch (err) {
+      dispatch(ActionCreator.setFormBlockStatus(false));
+      dispatch(ActionCreator.setErrorFormStatus(true));
+      setTimeout(() => dispatch(ActionCreator.setErrorFormStatus(false)), 600);
+    }
+  },
+
   changePointFavoriteStatus: (
     point: PointInterface,
     status: boolean,
@@ -141,7 +167,7 @@ export const Operation = {
 
 export const reducer = (
   state = initialState,
-  action: DataActionTypes,
+  action: AllReduxActions,
 ): InitialStateType => {
   switch (action.type) {
     case ActionType.LOAD_POINTS:
@@ -157,6 +183,8 @@ export const reducer = (
           (point) => Number(point.id) !== action.payload,
         ),
       };
+    case ActionType.CREATE_POINT:
+      return { ...state, points: [...state.points, action.payload] };
     case ActionType.CHANGE_POINT_FAVORITE_STATUS:
       return {
         ...state,
