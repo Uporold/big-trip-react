@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-const token = `qwegfdghjssdfsfsfsdfs`;
+const token = `AAAqwegfdghjssdfsfsfsdfs`;
 
 export const createAPI = (): AxiosInstance => {
   const api = axios.create({

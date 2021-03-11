@@ -17,7 +17,9 @@ export const getFormErrorStatus = (state: GlobalState) =>
   state.DATA.isFormError;
 
 export const getSortedFilteredPoints = createSelector(
-  [getPoints, getSortType, getFilterType],
+  getPoints,
+  getSortType,
+  getFilterType,
   (points, sortType, filterType) =>
     getPointsByFilter(getSortedPoints(points, sortType), filterType),
 );

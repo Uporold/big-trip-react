@@ -10,7 +10,6 @@ export const getSortedPoints = (
   sortType: SortingType,
 ) => {
   const showingEvents = points.slice();
-
   switch (sortType) {
     case SortType.PRICE:
       return showingEvents.sort((a, b) => b.basePrice - a.basePrice);
@@ -22,7 +21,7 @@ export const getSortedPoints = (
           (a.endDate.valueOf() - a.startDate.valueOf()),
       );
     default:
-      return showingEvents;
+      return points;
   }
 };
 

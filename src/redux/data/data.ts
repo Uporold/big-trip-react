@@ -8,6 +8,7 @@ import {
   PointBackend,
 } from "../../types";
 import { BaseThunkActionType, AllReduxActions } from "../reducer";
+import { Mode } from "../../const";
 
 export const initialState = {
   points: [] as Array<PointInterface>,
@@ -26,6 +27,7 @@ const ActionType = {
   LOAD_DESTINATIONS: `LOAD_DESTINATIONS`,
   DELETE_POINT: `DELETE_POINT`,
   CREATE_POINT: `CREATE_POINT`,
+  UPDATE_POINT: `UPDATE_POINT`,
   CHANGE_POINT_FAVORITE_STATUS: `CHANGE_POINT_FAVORITE_STATUS`,
   SET_FORM_BLOCK_STATUS: `SET_FORM_BLOCK_STATUS`,
   SET_ERROR_FORM_STATUS: `SET_ERROR_FORM`,
@@ -63,6 +65,13 @@ export const ActionCreator = {
   createPoint: (point: PointInterface) => {
     return {
       type: ActionType.CREATE_POINT,
+      payload: point,
+    };
+  },
+
+  updatePoint: (point: PointInterface) => {
+    return {
+      type: ActionType.UPDATE_POINT,
       payload: point,
     };
   },
@@ -139,7 +148,25 @@ export const Operation = {
       const response = await api.post(`/points`, data);
       dispatch(ActionCreator.createPoint(pointAdapter(response.data)));
       dispatch(ActionCreator.setFormBlockStatus(false));
-      dispatch(AppActionCreator.setMode(`default`));
+      dispatch(AppActionCreator.setMode(Mode.DEFAULT));
+    } catch (err) {
+      dispatch(ActionCreator.setFormBlockStatus(false));
+      dispatch(ActionCreator.setErrorFormStatus(true));
+      setTimeout(() => dispatch(ActionCreator.setErrorFormStatus(false)), 600);
+    }
+  },
+
+  updatePoint: (data: PointBackend): ThunkActionType => async (
+    dispatch,
+    getState,
+    api,
+  ) => {
+    dispatch(ActionCreator.setFormBlockStatus(true));
+    try {
+      const response = await api.put(`/points/${data.id}`, data);
+      dispatch(ActionCreator.updatePoint(pointAdapter(response.data)));
+      dispatch(ActionCreator.setFormBlockStatus(false));
+      dispatch(AppActionCreator.setMode(Mode.DEFAULT));
     } catch (err) {
       dispatch(ActionCreator.setFormBlockStatus(false));
       dispatch(ActionCreator.setErrorFormStatus(true));
@@ -185,6 +212,13 @@ export const reducer = (
       };
     case ActionType.CREATE_POINT:
       return { ...state, points: [...state.points, action.payload] };
+    case ActionType.UPDATE_POINT:
+      return {
+        ...state,
+        points: state.points.map((item) =>
+          item.id === action.payload.id ? action.payload : item,
+        ),
+      };
     case ActionType.CHANGE_POINT_FAVORITE_STATUS:
       return {
         ...state,

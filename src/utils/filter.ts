@@ -15,8 +15,6 @@ export const getPointsByFilter = (
   filterType: FilterType,
 ): PointInterface[] => {
   switch (filterType) {
-    // case Filter.EVERYTHING:
-    //   return points;
     case Filter.PAST:
       return points.filter((point) => isPastDate(point.startDate));
     case Filter.FUTURE:

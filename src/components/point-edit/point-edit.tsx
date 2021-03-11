@@ -23,6 +23,7 @@ import { useDeletePoint } from "../../redux/data/hooks/useDeletePoint";
 import { useChangePointFavoriteStatus } from "../../redux/data/hooks/useChangePointFavoriteStatus";
 import "flatpickr/dist/flatpickr.min.css";
 import { useCreatePoint } from "../../redux/data/hooks/useCreatePoint";
+import { useUpdatePoint } from "../../redux/data/hooks/useUpdatePoint";
 
 interface Props {
   point: PointInterface;
@@ -47,6 +48,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
   const cities = allDestinations.map((destination) => destination.name);
 
   const createPoint = useCreatePoint();
+  const updatePoint = useUpdatePoint();
 
   const [currentType, setType] = useState(point.type);
   const [currentCity, setCity] = useState(point.destination.name);
@@ -122,9 +124,9 @@ const PointEdit: React.FC<Props> = ({ point }) => {
     if (mode === Mode.ADDING) {
       createPoint(parseData);
     }
-    // if (mode === Mode.EDIT) {
-    //   // todo
-    // }
+    if (mode === Mode.EDIT) {
+      updatePoint(parseData);
+    }
   };
 
   const closeArrowHandler = () => {
