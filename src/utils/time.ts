@@ -4,10 +4,14 @@ import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 export const formatTimeDiff = (endDate: Date, startDate: Date): string => {
-  const timeDiff = dayjs(endDate).diff(dayjs(startDate));
-  const timeDiffFormatted =
-    dayjs.duration(timeDiff).days() >= 1 ? `DD[D]HH[H]:mm[M]` : `HH[H]:mm[M]`;
-  return dayjs.duration(timeDiff).format(timeDiffFormatted);
+  const timeDiff = dayjs.duration(dayjs(endDate).diff(dayjs(startDate)));
+  const days = timeDiff.days();
+  const hours = timeDiff.hours();
+  const minutes = timeDiff.minutes();
+
+  return `${days > 0 ? `${days}D` : ``} ${hours > 0 ? `${hours}H` : ``} ${
+    minutes > 0 ? `${minutes}M` : ``
+  }`;
 };
 
 export const formatDate = (date: Date, isForm?: boolean): string => {

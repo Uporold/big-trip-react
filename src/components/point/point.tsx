@@ -59,11 +59,14 @@ const Point: React.FC<Props> = memo(({ point }) => {
 
             <div className="event__schedule">
               <p className="event__time">
-                <time className="event__start-time" dateTime="2019-03-18T11:00">
+                <time
+                  className="event__start-time"
+                  dateTime={startDate.toJSON()}
+                >
                   {startTime}
                 </time>
                 {` — `}
-                <time className="event__end-time" dateTime="2019-03-18T11:00">
+                <time className="event__end-time" dateTime={endDate.toJSON()}>
                   {endTime}
                 </time>
               </p>
