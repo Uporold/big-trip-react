@@ -1,29 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import Flatpickr from "react-flatpickr";
 import { typeItemsTransfer, typeItemsActivity, Mode } from "../../const";
-import {
-  useDestinations,
-  useFormBlockedStatus,
-  useFormErrorStatus,
-  useOffers,
-} from "../../redux/data/hooks/selectors";
-import { ensure, capitalizeFirstLetter } from "../../utils/common";
-import {
-  DestinationInterface,
-  Offer,
-  PointBackend,
-  PointInterface,
-} from "../../types";
+import { capitalizeFirstLetter } from "../../utils/common";
+import { PointInterface } from "../../types";
 import Offers from "../offers/offers";
 import Destination from "../destination/destination";
-import { useMode } from "../../redux/app/hooks/selectors";
-import { useSetMode } from "../../redux/app/hooks/useSetMode";
-import { useSetActivePointId } from "../../redux/app/hooks/useSetActivePointId";
-import { useDeletePoint } from "../../redux/data/hooks/useDeletePoint";
-import { useChangePointFavoriteStatus } from "../../redux/data/hooks/useChangePointFavoriteStatus";
 import "flatpickr/dist/flatpickr.min.css";
-import { useCreatePoint } from "../../redux/data/hooks/useCreatePoint";
-import { useUpdatePoint } from "../../redux/data/hooks/useUpdatePoint";
+import useEditForm from "../../hooks/useEditForm";
 
 interface Props {
   point: PointInterface;
@@ -43,100 +26,30 @@ const shakeStyle = {
 } as React.CSSProperties;
 
 const PointEdit: React.FC<Props> = ({ point }) => {
-  const allDestinations = useDestinations();
-  const allOffers = useOffers();
-  const cities = allDestinations.map((destination) => destination.name);
-
-  const createPoint = useCreatePoint();
-  const updatePoint = useUpdatePoint();
-
-  const [currentType, setType] = useState(point.type);
-  const [currentCity, setCity] = useState(point.destination.name);
-  const [stateOffers, setOffers] = useState(point.offers);
-  const [currentPrice, setPrice] = useState(point.basePrice);
-
-  const changePointFavoriteStatus = useChangePointFavoriteStatus();
-
-  const mode = useMode();
-  const setMode = useSetMode();
-
-  const setActivePointId = useSetActivePointId();
-  const deletePoint = useDeletePoint();
-
-  const isFormBlocked = useFormBlockedStatus();
-  const isFormError = useFormErrorStatus();
-
-  const [startDate, setStartDate] = useState(point.startDate);
-  const [endDate, setEndDate] = useState(point.endDate);
-
-  useEffect(() => {
-    if (currentType !== point.type) {
-      setOffers([]);
-    }
-  }, [currentType, point.type]);
-
-  const handleOfferClick = useCallback(
-    (formOffer: Offer) => (_: React.MouseEvent) => {
-      if (stateOffers.some((offer) => offer.title === formOffer.title)) {
-        setOffers(
-          stateOffers.filter((offer) => offer.title !== formOffer.title),
-        );
-      } else {
-        setOffers([
-          ...stateOffers,
-          { title: formOffer.title, price: formOffer.price },
-        ]);
-      }
-    },
-    [stateOffers],
-  );
-
-  const selectedTypeOffers = ensure(
-    allOffers.find((it) => it.type.toLowerCase() === currentType),
-  ).offers;
-
-  const currentDestination = allDestinations.find(
-    (it) => it.name === currentCity,
-  );
-
-  const parseData: PointBackend = {
-    id: point.id || new Date().valueOf().toString(),
-    type: currentType,
-    destination: currentDestination as DestinationInterface,
-    base_price: currentPrice,
-    date_from: startDate.toJSON(),
-    date_to: endDate.toJSON(),
-    offers: stateOffers,
-    is_favorite: point.isFavorite,
-  };
-
-  const cancelButtonHandler = () => {
-    if (mode === Mode.ADDING) {
-      setMode(Mode.DEFAULT);
-    }
-    if (mode === Mode.EDIT) {
-      deletePoint(Number(point.id));
-    }
-  };
-
-  const submitFormHandler = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-    if (mode === Mode.ADDING) {
-      createPoint(parseData);
-    }
-    if (mode === Mode.EDIT) {
-      updatePoint(parseData);
-    }
-  };
-
-  const closeArrowHandler = () => {
-    setMode(Mode.DEFAULT);
-    setActivePointId(-1);
-  };
-
-  const priceHandler = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setPrice(+evt.target.value);
-  };
+  const {
+    cities,
+    mode,
+    stateOffers,
+    startDate,
+    endDate,
+    setEndDate,
+    setStartDate,
+    currentType,
+    currentCity,
+    currentDestination,
+    currentPrice,
+    isFormBlocked,
+    isFormError,
+    priceHandler,
+    handleCityChange,
+    handleFavoriteClick,
+    handleOfferClick,
+    handleTypeClick,
+    selectedTypeOffers,
+    cancelButtonHandler,
+    closeArrowHandler,
+    submitFormHandler,
+  } = useEditForm(point);
 
   const favoriteCheckboxAndCloseArrow = () => {
     return (
@@ -152,9 +65,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
         <label
           className="event__favorite-btn"
           htmlFor="event-favorite-1"
-          onClick={() => {
-            changePointFavoriteStatus(point, !point.isFavorite);
-          }}
+          onClick={handleFavoriteClick}
         >
           <span className="visually-hidden">Add to favorite</span>
           <svg
@@ -186,9 +97,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
           type="radio"
           name="event-type"
           value={type}
-          onClick={() => {
-            setType(type);
-          }}
+          onClick={handleTypeClick(type)}
           checked={currentType === type}
         />
         <label
@@ -258,9 +167,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
               name="event-destination"
               value={currentCity}
               list="destination-list-1"
-              onChange={(evt) => {
-                setCity(evt.target.value);
-              }}
+              onChange={handleCityChange}
             />
             <datalist id="destination-list-1">
               {cities.map((city) => (
@@ -278,7 +185,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
               className="event__input  event__input--time"
               options={{
                 dateFormat: `d/m/y H:i`,
-                minDate: point.startDate || `today`,
+                minDate: mode === Mode.ADDING ? `today` : point.startDate,
               }}
               onChange={(date) => {
                 if (date[0] > endDate) {
@@ -298,7 +205,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
               className="event__input  event__input--time"
               options={{
                 dateFormat: `d/m/y H:i`,
-                minDate: startDate || `today`,
+                minDate: startDate || new Date(),
               }}
               name="event-end-time"
               onChange={(date) => {
