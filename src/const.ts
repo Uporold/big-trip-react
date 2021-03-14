@@ -88,3 +88,9 @@ export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
 };
+
+export const ChartType = {
+  MONEY: `money`,
+  TRANSPORT: `transport`,
+  TIME_SPENT: `time spent`,
+};

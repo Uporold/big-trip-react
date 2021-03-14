@@ -16,6 +16,7 @@ export const initialState = {
   destinations: [] as Array<DestinationInterface>,
   isFormBlocked: false,
   isFormError: false,
+  isPointsLoading: true,
 };
 
 type InitialStateType = typeof initialState;
@@ -31,6 +32,7 @@ const ActionType = {
   CHANGE_POINT_FAVORITE_STATUS: `CHANGE_POINT_FAVORITE_STATUS`,
   SET_FORM_BLOCK_STATUS: `SET_FORM_BLOCK_STATUS`,
   SET_ERROR_FORM_STATUS: `SET_ERROR_FORM`,
+  FINISH_POINTS_LOADING: `FINISH_POINTS_LOADING`,
 } as const;
 
 export const ActionCreator = {
@@ -96,6 +98,13 @@ export const ActionCreator = {
       payload: status,
     };
   },
+
+  finishPointsLoading: () => {
+    return {
+      type: ActionType.FINISH_POINTS_LOADING,
+      payload: false,
+    };
+  },
 };
 
 export const Operation = {
@@ -105,6 +114,7 @@ export const Operation = {
     );
     const loadedPoints = response.data.map((point) => pointAdapter(point));
     dispatch(ActionCreator.loadPoints(loadedPoints));
+    dispatch(ActionCreator.finishPointsLoading());
   },
 
   loadOffers: (): ThunkActionType => async (dispatch, getState, api) => {
@@ -236,6 +246,8 @@ export const reducer = (
         ...state,
         isFormError: action.payload,
       };
+    case ActionType.FINISH_POINTS_LOADING:
+      return { ...state, isPointsLoading: action.payload };
     default:
       return state;
   }

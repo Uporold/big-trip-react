@@ -3,11 +3,19 @@ import duration from "dayjs/plugin/duration";
 
 dayjs.extend(duration);
 
-export const formatTimeDiff = (endDate: Date, startDate: Date): string => {
+export const getTimeDiffInMilliseconds = (
+  endDate: Date,
+  startDate: Date,
+): number => {
   const timeDiff = dayjs.duration(dayjs(endDate).diff(dayjs(startDate)));
-  const days = timeDiff.days();
-  const hours = timeDiff.hours();
-  const minutes = timeDiff.minutes();
+  return timeDiff.asMilliseconds();
+};
+
+export const formatTimeDiff = (timeDiff: number) => {
+  const dur = dayjs.duration(timeDiff);
+  const days = dur.days();
+  const hours = dur.hours();
+  const minutes = dur.minutes();
 
   return `${days > 0 ? `${days}D` : ``} ${hours > 0 ? `${hours}H` : ``} ${
     minutes > 0 ? `${minutes}M` : ``

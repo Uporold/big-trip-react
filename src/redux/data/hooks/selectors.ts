@@ -5,6 +5,7 @@ import {
   getFormErrorStatus,
   getOffers,
   getPoints,
+  getPointsLoadingStatus,
   getSortedFilteredPoints,
 } from "../selectors";
 import {
@@ -33,4 +34,8 @@ export const useFormBlockedStatus = (): boolean => {
 
 export const useFormErrorStatus = (): boolean => {
   return useSelector(getFormErrorStatus);
+};
+
+export const usePointsLoadingStatus = (): boolean => {
+  return useSelector(getPointsLoadingStatus);
 };

@@ -16,6 +16,9 @@ export const getFormBlockedStatus = (state: GlobalState) =>
 export const getFormErrorStatus = (state: GlobalState) =>
   state.DATA.isFormError;
 
+export const getPointsLoadingStatus = (state: GlobalState) =>
+  state.DATA.isPointsLoading;
+
 export const getSortedFilteredPoints = createSelector(
   [getPoints, getSortType, getFilterType],
   (points, sortType, filterType) =>
