@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { PointInterface } from "../types";
+import { PointInterface } from "../../types";
 
 interface Props {
   points: Array<PointInterface>;

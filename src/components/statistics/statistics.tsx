@@ -9,6 +9,7 @@ import { getTimeDiffInMilliseconds } from "../../utils/time";
 
 const Statistics: React.FC = (): JSX.Element => {
   const points = usePoints();
+
   const getData = (
     cb: ((point: PointInterface) => number) | (() => boolean),
   ) => {
@@ -22,7 +23,7 @@ const Statistics: React.FC = (): JSX.Element => {
 
       if (cb(point) === true) {
         typeItemsActivity.forEach((it) => {
-          sum.delete(it.toString().toLowerCase());
+          sum.delete(it);
         });
       }
 

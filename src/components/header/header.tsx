@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import { usePoints } from "../../redux/data/hooks/selectors";
 import Trail from "../trail/trail";
-import Controls from "../controls";
+import Controls from "../controls/controls";
 import Filter from "../filter/filter";
-import TotalPrice from "../total-price";
+import TotalPrice from "../total-price/total-price";
 import NewEventButton from "../new-event-button/new-event-button";
 
 const Header: React.FC = memo(function Header(): JSX.Element {

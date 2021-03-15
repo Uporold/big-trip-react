@@ -94,3 +94,8 @@ export const ChartType = {
   TRANSPORT: `transport`,
   TIME_SPENT: `time spent`,
 };
+
+export const PagePath = {
+  MAIN: `/`,
+  STATS: `/statistic`,
+};

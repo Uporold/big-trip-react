@@ -5,7 +5,7 @@ import thunk, { ThunkMiddleware } from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { Provider } from "react-redux";
 import { AxiosInstance } from "axios";
-import App from "./App";
+import App from "./components/app/App";
 import reportWebVitals from "./reportWebVitals";
 import { createAPI } from "./api";
 import { AllReduxActions, GlobalState, rootReducer } from "./redux/reducer";

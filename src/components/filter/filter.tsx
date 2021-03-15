@@ -1,8 +1,14 @@
 import React from "react";
-import { filters } from "../../const";
+import { filters, PagePath } from "../../const";
 import { FilterType } from "../../types";
 import { useSetFilterType } from "../../redux/app/hooks/useSetFilterType";
 import { useCurrentFilterType } from "../../redux/app/hooks/selectors";
+import history from "../../history";
+
+const disabledStyle = {
+  pointerEvents: `none`,
+  cursor: `default`,
+} as React.CSSProperties;
 
 const Filter: React.FC = (): JSX.Element => {
   const setFilter = useSetFilterType();
@@ -31,6 +37,9 @@ const Filter: React.FC = (): JSX.Element => {
             id={filter}
             className="trip-filters__filter-label"
             htmlFor={`filter-${filter}`}
+            style={
+              history.location.pathname !== PagePath.MAIN ? disabledStyle : {}
+            }
           >
             {filter}
           </label>

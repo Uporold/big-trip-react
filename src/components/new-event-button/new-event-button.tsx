@@ -1,10 +1,11 @@
 import React from "react";
 import { useSetMode } from "../../redux/app/hooks/useSetMode";
 import { useSetActivePointId } from "../../redux/app/hooks/useSetActivePointId";
-import { Filter, Mode, SortType } from "../../const";
+import { Filter, Mode, PagePath, SortType } from "../../const";
 import { useMode } from "../../redux/app/hooks/selectors";
 import { useSetSortType } from "../../redux/app/hooks/useSetSortType";
 import { useSetFilterType } from "../../redux/app/hooks/useSetFilterType";
+import history from "../../history";
 
 const NewEventButton: React.FC = (): JSX.Element => {
   const setMode = useSetMode();
@@ -23,7 +24,9 @@ const NewEventButton: React.FC = (): JSX.Element => {
     <button
       className="trip-main__event-add-btn  btn  btn--big  btn--yellow"
       type="button"
-      disabled={mode === Mode.ADDING}
+      disabled={
+        mode === Mode.ADDING || history.location.pathname !== PagePath.MAIN
+      }
       onClick={newEventButtonClickHandler}
     >
       New event
