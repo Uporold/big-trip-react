@@ -20,11 +20,7 @@ const Filter: React.FC = (): JSX.Element => {
   return (
     <form className="trip-filters" action="#" method="get">
       {filters.map((filter) => (
-        <div
-          className="trip-filters__filter"
-          onClick={setFilterHandler(filter)}
-          key={filter}
-        >
+        <div className="trip-filters__filter" key={filter}>
           <input
             id={`filter-${filter}`}
             className="trip-filters__filter-input  visually-hidden"
@@ -32,12 +28,12 @@ const Filter: React.FC = (): JSX.Element => {
             name="trip-filter"
             value={filter}
             checked={currentFilter === filter}
-            readOnly
           />
           <label
             id={filter}
             className="trip-filters__filter-label"
             htmlFor={`filter-${filter}`}
+            onClick={setFilterHandler(filter)}
             style={
               history.location.pathname !== PagePath.MAIN ? disabledStyle : {}
             }
