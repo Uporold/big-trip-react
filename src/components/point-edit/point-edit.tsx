@@ -60,6 +60,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
           type="checkbox"
           name="event-favorite"
           checked={point.isFavorite}
+          readOnly
         />
         <label
           className="event__favorite-btn"
@@ -89,14 +90,14 @@ const PointEdit: React.FC<Props> = ({ point }) => {
 
   const createTypeItem = (type: string) => {
     return (
-      <div className="event__type-item">
+      <div className="event__type-item" key={type}>
         <input
           id={`event-type-${type}-1`}
           className="event__type-input  visually-hidden"
           type="radio"
           name="event-type"
           value={type}
-          onClick={handleTypeClick(type)}
+          onChange={handleTypeClick(type)}
           checked={currentType === type}
         />
         <label
@@ -170,7 +171,7 @@ const PointEdit: React.FC<Props> = ({ point }) => {
             />
             <datalist id="destination-list-1">
               {cities.map((city) => (
-                <option value={city} />
+                <option value={city} key={city} />
               ))}
             </datalist>
           </div>

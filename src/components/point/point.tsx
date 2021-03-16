@@ -78,7 +78,7 @@ const Point: React.FC<Props> = memo(({ point }) => {
             <h4 className="visually-hidden">Offers:</h4>
             <ul className="event__selected-offers">
               {offers.slice(0, OFFERS_PREVIEW_LIMIT).map((offer) => (
-                <li className="event__offer">
+                <li className="event__offer" key={offer.title}>
                   <span className="event__offer-title">{offer.title}</span>
                   {` `} + &euro;
                   <span className="event__offer-price">{offer.price}</span>

@@ -15,7 +15,10 @@ const Sorting: React.FC<Props> = ({
 }): JSX.Element => {
   const checkbox = (sortType: SortingType) => {
     return (
-      <div className={`trip-sort__item  trip-sort__item--${sortType}`}>
+      <div
+        className={`trip-sort__item  trip-sort__item--${sortType}`}
+        key={sortType}
+      >
         <input
           id="sort-time"
           className="trip-sort__input  visually-hidden"
@@ -23,6 +26,7 @@ const Sorting: React.FC<Props> = ({
           name="trip-sort"
           value={`sort-${sortType}`}
           checked={sortType === currentSortType}
+          readOnly
         />
         <label
           data-sort-type="time"

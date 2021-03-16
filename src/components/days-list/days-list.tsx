@@ -16,7 +16,12 @@ const DaysList: React.FC<Props> = ({ currentSortType }): JSX.Element => {
       ? points.filter((point) => point.startDate.getDate() === date.day)
       : points;
     return (
-      <li className="trip-days__item  day">
+      <li
+        className="trip-days__item  day"
+        key={
+          date ? `${date.month}-${date.day + date.year}-day-list` : `day-list`
+        }
+      >
         <div className="day__info">
           <span className="day__counter">
             {index !== undefined ? `${index + 1}` : ``}
@@ -27,7 +32,7 @@ const DaysList: React.FC<Props> = ({ currentSortType }): JSX.Element => {
         </div>
         <ul className="trip-events__list">
           {pointsByDay.map((point) => (
-            <Point point={point} />
+            <Point key={point.id} point={point} />
           ))}
         </ul>
       </li>

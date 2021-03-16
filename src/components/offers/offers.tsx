@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { memo } from "react";
 import { Offer } from "../../types";
 
 interface Props {
@@ -15,7 +15,7 @@ const createOfferSelectorMarkup = (
   const isChecked = () =>
     selectedOffers.some((selectedOffer) => selectedOffer.title === offer.title);
   return (
-    <div className="event__offer-selector">
+    <div className="event__offer-selector" key={`${offer.title}-form`}>
       <input
         className="event__offer-checkbox  visually-hidden"
         id={`event-offer-${offer.title.toLowerCase()}-1`}
@@ -24,8 +24,8 @@ const createOfferSelectorMarkup = (
         checked={isChecked()}
         value={offer.title}
         data-price={offer.price}
+        readOnly
       />
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
       <label className="event__offer-label" onClick={handleOfferClick(offer)}>
         <span className="event__offer-title">{offer.title}</span>+ €
         <span className="event__offer-price">{offer.price}</span>

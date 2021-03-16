@@ -23,6 +23,7 @@ const Destination: React.FC<Props> = memo(function Destination({
               className="event__photo"
               src={picture.src}
               alt={picture.description}
+              key={picture.src}
             />
           ))}
         </div>

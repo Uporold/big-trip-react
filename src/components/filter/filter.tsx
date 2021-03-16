@@ -23,6 +23,7 @@ const Filter: React.FC = (): JSX.Element => {
         <div
           className="trip-filters__filter"
           onClick={setFilterHandler(filter)}
+          key={filter}
         >
           <input
             id={`filter-${filter}`}
@@ -31,6 +32,7 @@ const Filter: React.FC = (): JSX.Element => {
             name="trip-filter"
             value={filter}
             checked={currentFilter === filter}
+            readOnly
           />
           <label
             id={filter}
