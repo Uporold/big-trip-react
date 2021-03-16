@@ -19,7 +19,6 @@ const NewEventButton: React.FC = (): JSX.Element => {
     setFilterType(Filter.EVERYTHING);
     setMode(Mode.ADDING);
   };
-  console.log(`btn`);
   return (
     <button
       className="trip-main__event-add-btn  btn  btn--big  btn--yellow"

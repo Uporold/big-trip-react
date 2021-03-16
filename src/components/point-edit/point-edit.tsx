@@ -61,7 +61,6 @@ const PointEdit: React.FC<Props> = ({ point }) => {
           name="event-favorite"
           checked={point.isFavorite}
         />
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
         <label
           className="event__favorite-btn"
           htmlFor="event-favorite-1"

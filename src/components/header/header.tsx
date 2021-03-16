@@ -21,7 +21,6 @@ const Header: React.FC = memo(function Header(): JSX.Element {
           alt="Trip logo"
         />
         <div className="trip-main">
-          {/* Trail component */}
           <section className="trip-main__trip-info  trip-info">
             <Trail points={points} />
             <TotalPrice points={points} />

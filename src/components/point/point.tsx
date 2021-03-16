@@ -1,12 +1,10 @@
 import React, { memo } from "react";
 import { capitalizeFirstLetter } from "../../utils/common";
 import { PointInterface } from "../../types";
-import { Mode, OFFERS_PREVIEW_LIMIT, typeItemsActivity } from "../../const";
-import { formatTimeDiff, formatDate } from "../../utils/time";
+import { Mode, OFFERS_PREVIEW_LIMIT } from "../../const";
+import { formatTimeDiff } from "../../utils/time";
 import PointEdit from "../point-edit/point-edit";
-import { useSetMode } from "../../redux/app/hooks/useSetMode";
-import { useActivePointId, useMode } from "../../redux/app/hooks/selectors";
-import { useSetActivePointId } from "../../redux/app/hooks/useSetActivePointId";
+import { useDefaultPoint } from "../../hooks/useDefaultPoint";
 
 interface Props {
   point: PointInterface;
@@ -22,21 +20,16 @@ const Point: React.FC<Props> = memo(({ point }) => {
     basePrice,
     offers,
   } = point;
-  const isTypeActivity = typeItemsActivity.some(
-    (it) => type === it.toLowerCase(),
-  )
-    ? `in`
-    : `to`;
-  const mode = useMode();
-  const setMode = useSetMode();
-  const setActivePointId = useSetActivePointId();
-  const activePointId = useActivePointId();
-  const startTime = formatDate(startDate);
-  const endTime = formatDate(endDate);
-  const editPointButtonHandler = () => {
-    setActivePointId(Number(id));
-    setMode(Mode.EDIT);
-  };
+
+  const {
+    isTypeActivity,
+    mode,
+    activePointId,
+    startTime,
+    endTime,
+    editPointButtonHandler,
+  } = useDefaultPoint(point);
+
   return (
     <>
       {mode === Mode.EDIT && activePointId === Number(id) ? (

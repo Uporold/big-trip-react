@@ -1,6 +1,6 @@
 import React from "react";
 import { useSortedFilteredPoints } from "../../redux/data/hooks/selectors";
-import { getNoRepeatingDates } from "../trail/trail";
+import { getNoRepeatingDates } from "../../utils/trail";
 import { SortingType, UniqueDate } from "../../types";
 import Point from "../point/point";
 

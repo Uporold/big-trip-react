@@ -20,7 +20,6 @@ const Filter: React.FC = (): JSX.Element => {
   return (
     <form className="trip-filters" action="#" method="get">
       {filters.map((filter) => (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
         <div
           className="trip-filters__filter"
           onClick={setFilterHandler(filter)}

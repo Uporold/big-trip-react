@@ -24,7 +24,6 @@ const Sorting: React.FC<Props> = ({
           value={`sort-${sortType}`}
           checked={sortType === currentSortType}
         />
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
         <label
           data-sort-type="time"
           className="trip-sort__btn"
