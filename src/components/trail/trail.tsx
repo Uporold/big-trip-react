@@ -1,29 +1,20 @@
-import React from "react";
-import { PointInterface } from "../../types";
-import { getTrail, getNoRepeatingDates } from "../../utils/trail";
+import React, { memo } from "react";
 
 interface Props {
-  points: Array<PointInterface>;
+  trail: string;
+  daysInterval: string;
 }
 
-const Trail: React.FC<Props> = ({ points }): JSX.Element => {
-  const trail = getTrail(points);
-  const trailDates = getNoRepeatingDates(points);
-  const daysInterval = `${
-    trailDates.length
-      ? `${trailDates[0].month} ${trailDates[0].day} — ${
-          trailDates[0].month !== trailDates[trailDates.length - 1].month
-            ? trailDates[trailDates.length - 1].month
-            : ``
-        } ${trailDates[trailDates.length - 1].day}`
-      : ``
-  }`;
+const Trail: React.FC<Props> = memo(function Trail({
+  trail,
+  daysInterval,
+}): JSX.Element {
   return (
     <div className="trip-info__main">
       <h1 className="trip-info__title">{trail}</h1>
       <p className="trip-info__dates">{daysInterval}</p>
     </div>
   );
-};
+});
 
 export default Trail;

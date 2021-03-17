@@ -27,3 +27,15 @@ export const getNoRepeatingDates = (
 
   return Array.from(set).map((point) => JSON.parse(point));
 };
+
+export const getDaysInterval = (trailDates: UniqueDate[]): string => {
+  return `${
+    trailDates.length
+      ? `${trailDates[0].month} ${trailDates[0].day} — ${
+          trailDates[0].month !== trailDates[trailDates.length - 1].month
+            ? trailDates[trailDates.length - 1].month
+            : ``
+        } ${trailDates[trailDates.length - 1].day}`
+      : ``
+  }`;
+};

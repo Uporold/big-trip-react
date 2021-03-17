@@ -1,18 +1,23 @@
-import React from "react";
+import React, { memo } from "react";
 import { SortingType } from "../../types";
 import { SortType, sortTypes } from "../../const";
+import { useSetSortType } from "../../redux/app/hooks/useSetSortType";
 
 interface Props {
-  setSortTypeHandler: (
-    sortType: SortingType,
-  ) => (evt: React.MouseEvent) => void;
   currentSortType: SortingType;
 }
 
-const Sorting: React.FC<Props> = ({
-  setSortTypeHandler,
+const Sorting: React.FC<Props> = memo(function Sorting({
   currentSortType,
-}): JSX.Element => {
+}): JSX.Element {
+  const setSortType = useSetSortType();
+  const setSortTypeHandler = (sortType: SortingType) => (
+    evt: React.MouseEvent,
+  ) => {
+    evt.preventDefault();
+    setSortType(sortType);
+  };
+
   const checkbox = (sortType: SortingType) => {
     return (
       <div
@@ -56,6 +61,6 @@ const Sorting: React.FC<Props> = ({
       <span className="trip-sort__item  trip-sort__item--offers">Offers</span>
     </form>
   );
-};
+});
 
 export default Sorting;

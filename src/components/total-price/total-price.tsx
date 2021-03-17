@@ -1,29 +1,18 @@
-import React, { useMemo } from "react";
-import { PointInterface } from "../../types";
+import React, { memo } from "react";
 
 interface Props {
-  points: Array<PointInterface>;
+  totalPrice: number;
 }
 
-export const getTotalPrice = (array: Array<PointInterface>): number => {
-  let sum = 0;
-  array.forEach((point) => {
-    sum += point.basePrice;
-    point.offers.forEach((offer) => {
-      sum += offer.price;
-    });
-  });
-  return sum;
-};
-
-const TotalPrice: React.FC<Props> = ({ points }): JSX.Element => {
-  const totalPrice = useMemo(() => getTotalPrice(points), [points]);
+const TotalPrice: React.FC<Props> = memo(function TotalPrice({
+  totalPrice,
+}): JSX.Element {
   return (
     <p className="trip-info__cost">
       Total: &euro;&nbsp;
       <span className="trip-info__cost-value">{totalPrice}</span>
     </p>
   );
-};
+});
 
 export default TotalPrice;

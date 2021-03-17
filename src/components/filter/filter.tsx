@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { filters, PagePath } from "../../const";
 import { FilterType } from "../../types";
 import { useSetFilterType } from "../../redux/app/hooks/useSetFilterType";
@@ -10,7 +10,7 @@ const disabledStyle = {
   cursor: `default`,
 } as React.CSSProperties;
 
-const Filter: React.FC = (): JSX.Element => {
+const Filter: React.FC = memo(function Filter(): JSX.Element {
   const setFilter = useSetFilterType();
   const currentFilter = useCurrentFilterType();
   const setFilterHandler = (filter: FilterType) => (evt: React.MouseEvent) => {
@@ -28,6 +28,7 @@ const Filter: React.FC = (): JSX.Element => {
             name="trip-filter"
             value={filter}
             checked={currentFilter === filter}
+            readOnly
           />
           <label
             id={filter}
@@ -47,6 +48,6 @@ const Filter: React.FC = (): JSX.Element => {
       </button>
     </form>
   );
-};
+});
 
 export default Filter;
