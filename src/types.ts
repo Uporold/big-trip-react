@@ -48,4 +48,4 @@ export interface UniqueDate {
 }
 
 export type SortingType = `event` | `time` | `price`;
-export type FilterType = `everything` | `future` | `past`;
+export type FilterType = `everything` | `future` | `past` | `favorites`;

@@ -1,22 +1,9 @@
-import {
-  DestinationInterface,
-  FilterType,
-  PointInterface,
-  SortingType,
-} from "./types";
-import { formatDate } from "./utils/time";
+import { FilterType, PointInterface, SortingType } from "./types";
 
 export const URL = {
   POINTS: `points`,
   DESTINATIONS: `destinations`,
   OFFERS: `offers`,
-};
-
-export const Method = {
-  GET: `GET`,
-  POST: `POST`,
-  PUT: `PUT`,
-  DELETE: `DELETE`,
 };
 
 export const endPoint = `https://11.ecmascript.pages.academy/big-trip`;
@@ -38,7 +25,12 @@ export const months = [
   `DEC`,
 ];
 
-export const filters: FilterType[] = [`everything`, `future`, `past`];
+export const filters: FilterType[] = [
+  `everything`,
+  `future`,
+  `past`,
+  `favorites`,
+];
 
 export const sortTypes: SortingType[] = [`event`, `time`, `price`];
 
@@ -52,6 +44,7 @@ export const Filter = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,
+  FAVORITES: `favorites`,
 } as const;
 
 export const typeItemsTransfer = [

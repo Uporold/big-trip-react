@@ -19,6 +19,8 @@ export const getPointsByFilter = (
       return points.filter((point) => isPastDate(point.startDate));
     case Filter.FUTURE:
       return points.filter((point) => isFutureDate(point.startDate));
+    case Filter.FAVORITES:
+      return points.filter((point) => point.isFavorite);
     default:
       return points;
   }
