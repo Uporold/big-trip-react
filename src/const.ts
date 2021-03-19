@@ -1,14 +1,6 @@
 import { FilterType, PointInterface, SortingType } from "./types";
 
-export const URL = {
-  POINTS: `points`,
-  DESTINATIONS: `destinations`,
-  OFFERS: `offers`,
-};
-
 export const endPoint = `https://11.ecmascript.pages.academy/big-trip`;
-
-export const token = `vbfgdfgdfgrertertdff344523fg`;
 
 export const months = [
   `JAN`,
