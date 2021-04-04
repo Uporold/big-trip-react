@@ -64,9 +64,7 @@ const Point: React.FC<Props> = memo(({ point }) => {
                 </time>
               </p>
               <p className="event__duration">
-                {formatTimeDiff(
-                  endDate.getMilliseconds() - startDate.getMilliseconds(),
-                )}
+                {formatTimeDiff(endDate.getTime() - startDate.getTime())}
               </p>
             </div>
 
